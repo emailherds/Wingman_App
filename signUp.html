@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wingman Login</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel = "stylesheet" href = "loginCSS.css">
+</head>
+<body>
+    <div id="login-box">
+        <div class="center">
+          <h1 id='status'>Sign Up</h1>
+
+          <input type="text" id="username" name="username" placeholder="Username" />
+          <input type="text" id="email" name="email" placeholder="E-mail" />
+          <input type="password" id="password" name="password" placeholder="Password" />
+          
+          <input type="submit" id='signUp' name="signUp_submit" value="Sign Up" />
+          
+          <br> 
+          <br> 
+          <a href = "login.html">Login into Account</a>
+
+        </div>
+    </div>
+</body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getDatabase,set,ref } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCMlAQr3YFIjMKeK1grzFTOS0XXXKKKg-k",
+      authDomain: "wingman-f8e65.firebaseapp.com",
+      databaseURL: "https://wingman-f8e65-default-rtdb.firebaseio.com",
+      projectId: "wingman-f8e65",
+      storageBucket: "wingman-f8e65.appspot.com",
+      messagingSenderId: "808265507270",
+      appId: "1:808265507270:web:a44f8ed3addf72094b52c7"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app); 
+    const auth = getAuth();
+
+    signUp.addEventListener('click',(e) => { 
+        
+        var email = document.getElementById('email').value; 
+        var password = document.getElementById('password').value;
+        var username = document.getElementById('username').value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+
+                set(ref(database, 'users/' + user.uid),{ 
+                    username: username,  
+                    email: email 
+                })
+                
+                document.location.href = "quiz.html"; 
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert(errorMessage); 
+                // ..
+            });
+    });
+
+    const user = auth.currentUser;
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        //bla bla bla
+        // ...
+    } else {
+        // User is signed out
+        // ...
+        //bla bla bla
+    }
+    });
+
+  </script>
+</html>
